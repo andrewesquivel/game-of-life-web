@@ -1,30 +1,14 @@
-var CONTROLLER  = function(document){
-	var step;
-	var getBoard;
-	var displayBoard;
-	var alive = false;
-
-	var start = function(initializeBoard,stepFunction,getBoardFunction, displayFunction) {
-		initializeBoard();
-		step = stepFunction;
-		getBoard = getBoardFunction;
-		displayBoard = displayFunction;
-		startLiving();
+var myCanvas = document.getElementById('board');
+var myContext = myCanvas.getContext('2d');
+var fillCanvas = function(array){
+	for (var x = 0; x < array.length; x++) {
+		var l = "";
+		for (var y = 0; y < array.length; y++) {
+			if (array[x][y])
+				myContext.fillStyle = "orange";
+			else
+				myContext.fillStyle = "black";
+			ctx.fillRect(y*array[0].length,x*array.length,array[0].length,array.length);
+		}
 	}
-
-	var startLiving = function(){
-		alive = true;
-		while(alive){setTimeout(stepAndPrint,5000)}
-	}
-
-	var pauseLiving = function(){
-		alive = false;
-	}
-
-	var stepAndPrint = function(){
-		step();
-		displayBoard();
-	}
-
-	return {"startGame":start, "pauseGame":pauseLiving, "restartGame":startLiving}
-})(document);
+}
