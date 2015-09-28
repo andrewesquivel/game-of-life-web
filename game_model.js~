@@ -1,5 +1,5 @@
 var MODEL  = function(document){
-	var hasSteppped = false;
+	var stepCount = 0;
 	var board = null;
 
 	/**
@@ -27,7 +27,7 @@ var MODEL  = function(document){
 	*/
 	var step = function() {
 		if(board == null){throw {"error":"must makeBoard(w,h) first"};}
-	   	if(!hasStepped){hasStepped = true;}
+	   	stepCount +=1;
 		var boardNext = new Array(board.length);
 		for (var i = 0; i < game.board.length; i++) {
 		boardNext[i] = new Array(board[i].length);
@@ -69,8 +69,9 @@ var MODEL  = function(document){
 	* turn a square to the alive state
 	*/
 	var birthSquare = function(row,col){
-		if(!withinWidthAndHeight(row,col)){throw {"error":"out of bounds"};}
-		if(hasStepped) {throw {"error":"can only call before first step"}
+		if(!withinWidthAndHeight(row,col) && this.stepCount == 0){
+			throw {"error":"out of bounds"}
+		}
 		board[row][col] = 1
 	}
 
@@ -78,32 +79,18 @@ var MODEL  = function(document){
 	* turn a square to the dead state
 	*/
 	var killSquare = function(row,col){
-		if(!withinWidthAndHeight(row,col)){throw {"error":"out of bounds"};}
-		if(hasStepped) {throw {"error":"can only call before first step"}
-		board[row][col] = 0
-	}
-
-	var getWidth = function(){
-		if(!withinWidthAndHeight(row,col)){throw {"error":"out of bounds"};}
-		return board[0].length;
-	}
-
-	var getHeight = function(){
-		if(!withinWidthAndHeight(row,col)){throw {"error":"out of bounds"};}
-		return board.length;
-	}
-
-	var isAlive = function(row,col){
-		if(board == null){throw {"error":"must makeBoard(w,h) first"};}
 		if(!withinWidthAndHeight(row,col) && this.stepCount == 0){
 			throw {"error":"out of bounds"}
 		}
-
+		board[row][col] = 0
 	}
 
-	
-
-	
+	/**
+	* return a copy of the board
+	*/
+	var getState = function () {
+		return board.slice(0);
+	}
 
 	/**
 	* return true if row and col are within the dimensions of the board
@@ -121,8 +108,5 @@ var MODEL  = function(document){
 	
 	
 
-	return {"makeBoard":makeBoard,
-		"getBoard":getState,
-		"birthSquare":birthSquare,
-		"killSquare":killSquare }
+	return {"initBoard":Board }
 })(document);

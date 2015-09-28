@@ -1,14 +1,30 @@
-var myCanvas = document.getElementById('board');
-var myContext = myCanvas.getContext('2d');
-var fillCanvas = function(array){
-	for (var x = 0; x < array.length; x++) {
-		var l = "";
-		for (var y = 0; y < array.length; y++) {
-			if (array[x][y])
-				myContext.fillStyle = "orange";
-			else
-				myContext.fillStyle = "black";
-			ctx.fillRect(y*array[0].length,x*array.length,array[0].length,array.length);
-		}
+var CONTROLLER = function(document){
+	var step;
+	var update;
+	var interval;
+	var playing = false;
+
+	var initGame = function(stepFunction,displayFunction,stepInterval){
+		step = stepFunction;
+		update = displayFunction;
+		interval = stepInterval;
 	}
-}
+	
+	var startGame = function(){
+		playing = true;
+		while(playing){setTimeout(myBoard.step(),5000);}
+	}
+
+	var pauseGame = function(){
+		playing = false;
+	}
+
+	var gameIsRunning = function(){
+		return playing;
+	}
+
+
+	return {"pauseGame":pauseGame, 
+		"startGame":startGame, 
+		"gameIsRunning":gameIsRunning}
+})(document);
