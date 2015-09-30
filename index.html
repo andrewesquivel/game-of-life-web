@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html> 
-  <head> 
-    <title></title> 
-    <script scr = "game_model.js" charset="utf-8"></script>
-  </head> 
-  <body><br> 
-    <canvas id="board" width="75" height="75"> 
-      No canvas support found!
-    </canvas><br><br>
-    <script type="text/javascript">
-      var myCanvas = document.getElementById('board');
-      var myContext = myCanvas.getContext('2d');
-      var fillCanvas = function(array){
-        for (var x = 0; x < array.length; x++) {
-          var l = "";
-          for (var y = 0; y < array.length; y++) {
-            if (array[x][y])
-              myContext.fillStyle = "orange";
-            else
-              myContext.fillStyle = "black";
-            ctx.fillRect(y*array[0].length,x*array.length,array[0].length,array.length);
-          }
-        }
-      }
-
-      
-
-    </script>
-  </body> 
+<head> 
+  <title>6.170 Assignment 2: Game Of Life</title> 
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head> 
+<body>
+  <div class = "main">
+    <canvas id="board" width="800" height="800"> 
+    No canvas support found!
+    </canvas>
+  </div>
+  <div class = "controls">
+    <p class="title">Controls</p>
+    <button class="button" id = "startStop">Start</button> 
+    <button class="button" id = "step">Step</button> 
+    <button class="button" id = "clear">Clear</button>
+    <p class="title">Presets</p>
+    <button class="button" id = "even">Even</button> 
+    <button class="button" id = "random">Random</button> 
+    <p class="title">Shapes</p>
+    <p class="info">Click To Select Shape then Click Game Board To Add</p>
+    <button class="button" id = "slider">Slider</button> 
+    <button class="button" id = "blinker">Blinker</button> 
+    <button class="button" id = "beacon">Beacon</button> 
+    <button class="button" id = "toad">Toad</button> 
+  </div>
+  <div class = "controls">
+  </div>
+  
+  <script src="jquery-2.1.4.min.js"></script>
+  <script src = "./presets.js" charset="utf-8"></script>
+  <script src = "./model.js" charset="utf-8"></script>
+  <script src = "./display.js" charset="utf-8"></script>
+  <script src = "./controller.js" charset="utf-8"></script> 
+  <script src = "./events.js" charset="utf-8"></script> 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      CONTROLLER.initGame(100,100,100);
+    });
+  </script>
+</body> 
 </html>

@@ -1,0 +1,22 @@
+div.main, div.controls{
+	display: inline;
+	float: left;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.button{
+	display: block;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 100px;
+}
+
+.title{
+	padding-top: 30px;
+	font-size: 100%;
+}
+
+.info{
+	font-size: 70%;
+}
