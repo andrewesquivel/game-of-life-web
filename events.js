@@ -9,6 +9,10 @@ $('#startStop').click(function(){
 	}
 });
 
+$('#step').click(function(){
+	CONTROLLER.stepAndUpdate();
+});
+
 $('#board').on("click", function(e) {
 	var boardWidth = $(this).width();
 	var boardHeight = $(this).height();
