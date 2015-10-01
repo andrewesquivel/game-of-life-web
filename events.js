@@ -21,70 +21,28 @@ $('#board').on("click", function(e) {
     else{CONTROLLER.squareClicked(percWidth,percHeight);}
 });
 
-
-$('#even').on('click',function(){
-	CONTROLLER.addPreset('even');
+$('.presets').on('click', function(e){
+	CONTROLLER.addPreset(e.target.id);
 });
 
-$('#random').on('click',function(){
-	CONTROLLER.addPreset('random');
-});
-
-$('#step').on('click',function(){
-	CONTROLLER.stepAndUpdate();
-});
-
-
-var toAdd = null;
 
 $('#clear').on("click",function(){
 	CONTROLLER.clearBoard();
 });
 
-$('#slider').on("click", function(){
-	if(toAdd == CONTROLLER.SLIDER){
-		$(this).css('color', '');
+
+var toAdd = null;
+$('.shapes').on('click', function(e){
+	var id =e.target.id;
+	if(toAdd == id){
+		$('#'+id).css('color', '');
 		toAdd = null;
 	}
 	else{
-		$('.button').css('color','');
-		$(this).css('color','red');
-		toAdd = CONTROLLER.SLIDER;
+		$('.shapes').css('color','');
+		$('#'+id).css('color','red');
+		toAdd = id;
 	}
 });
 
-$('#blinker').on("click", function(){
-	if(toAdd == CONTROLLER.BLINKER){
-		$(this).css('color', '');
-		toAdd = null;
-	}
-	else{
-		$('.button').css('color','');
-		$(this).css('color','red');
-		toAdd = CONTROLLER.BLINKER;
-	}
-});
 
-$('#toad').on("click", function(){
-	if(toAdd == CONTROLLER.TOAD){
-		$(this).css('color', '');
-		toAdd = null;
-	}
-	else{
-		$('.button').css('color','');
-		$(this).css('color','red');
-		toAdd = CONTROLLER.TOAD;
-	}
-});
-
-$('#beacon').on("click", function(){
-	if(toAdd == CONTROLLER.BEACON){
-		$(this).css('color', '');
-		toAdd = null;
-	}
-	else{
-		$('.button').css('color','');
-		$(this).css('color','red');
-		toAdd = CONTROLLER.BEACON;
-	}
-});

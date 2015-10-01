@@ -5,7 +5,7 @@ div.main, div.controls{
 	padding-right: 10px;
 }
 
-.button{
+.controls,.presets,.shapes{
 	display: block;
 	padding-top: 10px;
 	padding-bottom: 10px;

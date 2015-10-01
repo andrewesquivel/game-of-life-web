@@ -1,3 +1,6 @@
+/*
+* This interface handles putting the board in the display
+*/
 var DISPLAY = (function(document){
 	var myCanvas = document.getElementById('board');
 	var myContext = myCanvas.getContext('2d');
@@ -16,9 +19,9 @@ var DISPLAY = (function(document){
 			var l = "";
 			for (var y = 0; y < array.length; y++) {
 				if (array[x][y])
-					myContext.fillStyle = "orange";
+					myContext.fillStyle = "purple";
 				else
-					myContext.fillStyle = "black";
+					myContext.fillStyle = "yellow";
 				myContext.fillRect(x*rectWidth, y*rectHeight,rectWidth,rectHeight);
 			}
 		}

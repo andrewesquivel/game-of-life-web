@@ -1,13 +1,13 @@
+/*
+* This interface handles the game itself, starting and stopping the game, as well as telling the display when to update
+*/
 var CONTROLLER = (function(document) {
 	var interval = 1000;
 	var iterator;
 	var isRunning;
 
 	//string refering to the preset shapes
-	var SLIDER = 'slider';
-	var BEACON = 'beacon';
-	var BLINKER = 'blinker';
-	var TOAD = 'toad';
+	
 
 	/**
 	* width - must be greater than 0
@@ -19,7 +19,7 @@ var CONTROLLER = (function(document) {
 		if(width <= 0 || height <= 0){throw {"error" : "invalid dimensions"};}
 		if(stepInterval < 0){throw {"error":"invalid interval"};}
 		MODEL.makeBoard(width,height);
-		DISPLAY.update(MODEL.getState());
+		updateDisplay();
 		interval = stepInterval;
 	}
 	
@@ -44,7 +44,13 @@ var CONTROLLER = (function(document) {
 	*/
 	var stepAndUpdate = function(){
 		MODEL.step();
-		DISPLAY.update(MODEL.getState());
+		updateDisplay();
+	}
+
+	var updateDisplay = function(){
+		if(typeof DISPLAY != 'undefined'){
+			DISPLAY.update(MODEL.getState());
+		}
 	}
 
 	/**
@@ -64,7 +70,7 @@ var CONTROLLER = (function(document) {
 		var col =Math.floor(percH*MODEL.getHeight());
 
 		MODEL.switchSquare(row,col);
-		DISPLAY.update(MODEL.getState());
+		updateDisplay();
 	}
 
 	/**
@@ -78,22 +84,26 @@ var CONTROLLER = (function(document) {
 		var row =Math.floor(percW*MODEL.getWidth());
 		var col =Math.floor(percH*MODEL.getHeight());
 
-		if(toAdd === SLIDER){MODEL.dropIn(row,col,PRESETS.slider);}
-		else if(toAdd === BEACON){MODEL.dropIn(row,col,PRESETS.beacon);}
-		else if(toAdd === BLINKER){MODEL.dropIn(row,col,PRESETS.blinker);}
-		else if(toAdd === TOAD){MODEL.dropIn(row,col,PRESETS.toad);}
-		else{throw {"error":"invalid add string"}};
-		DISPLAY.update(MODEL.getState());
+		if(toAdd.indexOf('slider') >=0){MODEL.dropIn(row,col,PRESETS.slider);}
+		else if(toAdd.indexOf('beacon')>=0){MODEL.dropIn(row,col,PRESETS.beacon);}
+		else if(toAdd.indexOf('blinker')>=0){MODEL.dropIn(row,col,PRESETS.blinker);}
+		else if(toAdd.indexOf('toad')>=0){MODEL.dropIn(row,col,PRESETS.toad);}
+		// else{throw {"error":"invalid add string"}};
+		updateDisplay();
 
 	}
 
+	/**
+	* preset - must contain "row", "random", or "box"
+	* sets the board to one of the preset states
+	*/
 	var addPreset = function(preset){
-		if(preset.indexOf('even') >=0){
-			MODEL.setState(PRESETS.even(MODEL.getWidth(),MODEL.getHeight()));
-		}else if(preset.indexOf('random') >=0){
-			MODEL.setState(PRESETS.random(MODEL.getWidth(),MODEL.getHeight()));
-		}
-		DISPLAY.update(MODEL.getState());
+		var width = MODEL.getWidth();
+		var height = MODEL.getHeight();
+		if(preset.indexOf('row') >=0){MODEL.setState(PRESETS.rows(width,height));}
+		else if(preset.indexOf('random') >=0){MODEL.setState(PRESETS.random(width,height));}
+		else if(preset.indexOf('box') >=0){MODEL.setState(PRESETS.boxes(width,height));}
+		updateDisplay();
 
 	}
 
@@ -102,7 +112,7 @@ var CONTROLLER = (function(document) {
 	*/
 	var clearBoard = function(){
 		MODEL.resetBoard();
-		DISPLAY.update(MODEL.getState());
+		updateDisplay();
 	}
 
 
@@ -114,9 +124,5 @@ var CONTROLLER = (function(document) {
 		"squareClicked":squareClicked,
 		"addPreset":addPreset,
 		"addShape":addShape,
-		"SLIDER":SLIDER,
-		"BEACON": BEACON,
-		"BLINKER":BLINKER,
-		"TOAD":TOAD,
 		"clearBoard":clearBoard};
 })(document);

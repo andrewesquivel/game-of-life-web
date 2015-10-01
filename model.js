@@ -1,9 +1,9 @@
+/**
+* This interface handles the board, creating it, adding to it, taking the board through a step, reseting the board etc
+*/
 var MODEL  = (function(document){
 	var board = null;
-
-	//preset shapes
 	
-
 	/**
 	*	@param width - desired width of board, must be greater than 0
 	*	@param height - desired height of board, must be greater than 0
@@ -14,9 +14,7 @@ var MODEL  = (function(document){
 		board = new Array(height);
 		for (var x = 0; x < height; x++) {
 			board[x] = new Array(width);
-			for (var y = 0; y < width; y++) {
-				board[x][y] = 0;
-			}
+			for (var y = 0; y < width; y++) {board[x][y] = 0;}
 		}
 	}
 
@@ -33,40 +31,63 @@ var MODEL  = (function(document){
 	var step = function() {
 		if(board == null){throw {"error":"must makeBoard(w,h) first"};}
 		var boardNext = new Array(board.length);
-		for (var i = 0; i < board.length; i++) {
-		boardNext[i] = new Array(board[i].length);
-		}
-		for (var x = 0; x < board.length; x++) {
-		for (var y = 0; y < board[x].length; y++) {
-		var n = 0;
-		for (var dx = -1; dx <= 1; dx++) {
-		  for (var dy = -1; dy <= 1; dy++) {
-		    if ( dx == 0 && dy == 0){}
-		    else if (typeof board[x+dx] !== 'undefined'
-			&& typeof board[x+dx][y+dy] !== 'undefined'
-			&& board[x+dx][y+dy]) {
-		      n++;
-		    }
-		  } 
-		}
-		var c = board[x][y];
-		switch (n) {
-		  case 0:
-		  case 1:
-		    c = 0;
-		    break;
-		  case 2:
-		    break; 
-		  case 3:
-		    c = 1;
-		    break;
-		  default:
-		    c = 0;
-		}
-		boardNext[x][y] = c;
-		}
+		for (var i = 0; i < board.length; i++) {boardNext[i] = new Array(board[i].length);}
+		for (var r = 0; r < board.length; r++) {
+			for (var c = 0; c < board[r].length; c++) {
+				var neighbors = getNeighbors(r,c);
+				var count = countAlive(neighbors);
+				var getNextVal = getNextValFunction(board[r][c]);
+				boardNext[r][c] = getNextVal(count);
+			}
 		}
 		board = boardNext;
+	}
+
+	/**
+	* value - 0 or 1
+	* returns a function that when called with a count (of alive neighbors) and returns the next value for that square
+	*/
+	var getNextValFunction = function(value){
+		//EXAMPLE USE OF FUNCTIONALS
+		var getNextVal = function(count){
+			if(value == 1){
+				if(count < 2 || count > 3){return 0;}
+				return 1;
+			}
+			if(count == 3){return 1;}
+			return 0;
+		}
+		return getNextVal;
+	}
+
+	/**
+	* row & col must be a number
+	* returns a list of all the neighboring cels to the given row and col
+	*/
+	var getNeighbors = function(row,col){
+		if(outOfBounds(row,col)){throw{"error":"out of bounds"};}
+		var neighbors = [];
+		var deltas = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+		//EXAMPLE USE OF FUNCTIONALS
+		deltas.forEach(function(delta){
+			var nRow = row + delta[0];
+			var nCol = col + delta[1];
+			if(!outOfBounds(nRow,nCol)){
+				neighbors.push(board[nRow][nCol]);
+			}
+		});
+		return neighbors;
+	}
+
+	/**
+	* neighbors - must be an array
+	* return the number of alive neighbors in the list (ie neighbor ==1)
+	*/
+	var countAlive = function(neighbors){
+		//EXAMPLE USE OF FUNCTIONALS
+		return neighbors.reduce(function(previousValue, currentValue, index, array) {
+  			return previousValue + currentValue;
+		});
 	}
 
 	/**
@@ -96,7 +117,8 @@ var MODEL  = (function(document){
 	*  return width of the board
 	*/
 	var getWidth = function(){
-		return board[0].length;
+		if(getHeight() > 0){return board[0].length;}
+		return 0;
 	}
 
 	/**
@@ -111,16 +133,24 @@ var MODEL  = (function(document){
 	*/
 	var getState = function(){return board.slice(0);}
 
+	var isAlive = function(r,c){
+		if(outOfBounds(r,c)){return false;}
+		if(board[r][c]){return true;}
+		return false;
+	}
 
+
+	/**
+	* state must be a two dimensional array
+	* sets the board to the state
+	*/
 	var setState = function(state){board = state;}
 
 	/**
 	* return false if row and col are within the dimensions of the board ow returns trues
 	*/
 	var outOfBounds = function(row,col){
-		if(row >= getHeight() || col >= getWidth() || row < 0 || col < 0){
-			return true;
-		}
+		if(row >= getHeight() || col >= getWidth() || row < 0 || col < 0){return true;}
 		return false;
 	}
 	
@@ -131,11 +161,8 @@ var MODEL  = (function(document){
 		"getHeight":getHeight,
 		"switchSquare":switchSquare,
 		"step":step,
-		"slider":slider,
-		"beacon":beacon,
-		"toad":toad,
-		"blinker":blinker,
 		"dropIn":dropIn,
 		"resetBoard":resetBoard,
-		"setState":setState};
+		"setState":setState,
+		"isAlive":isAlive};
 })(document);
